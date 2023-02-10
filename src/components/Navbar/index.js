@@ -3,7 +3,7 @@
 function Navbar() {
     return (
         <nav>
-            <div>Ironhack turma 94</div>
+            <h2>Ironhack turma 94</h2>
         </nav>
     );
 }
