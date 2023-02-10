@@ -1,5 +1,5 @@
 export function Footer() {
   return (
-    <footer>Desenvolvido na Ironhack</footer>
+    <footer>Desenvolvido por Caroline Santos</footer>
   );
 }
