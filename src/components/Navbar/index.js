@@ -1,11 +1,11 @@
 
 
 function Navbar() {
-    return ( 
+    return (
         <nav>
-            <h1>Ironhack turma 94</h1>
+            <div>Ironhack turma 94</div>
         </nav>
-     );
+    );
 }
 
 export default Navbar;
