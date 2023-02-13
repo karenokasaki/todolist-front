@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import api from "../../api/api";
 import CreateTodoForm from "../../components/CreateTodoForm";
@@ -16,44 +17,61 @@ function TodoListPage() {
     fetchTodos();
   }, [reload]);
 
-
   return (
     <div>
-      <h1>Todo List</h1>
-
       <CreateTodoForm setReload={setReload} />
 
-      <h2>Lista - Não Finalizados</h2>
-      <div>
-        {todos
-          .filter((todo) => !todo.attributes.complete)
-          .map((todo) => {
-            return (
-              <div key={todo.id}>
-                <Link to={`/todo-list/${todo.id}`}>
-                  {todo.attributes.title}
-                </Link>
-                <p>{todo.attributes.name}</p>
-              </div>
-            );
-          })}
-      </div>
+      <Container>
+        <Row>
+          <Col className="m-3">
+            <Card bg="light" text="dark" border="danger">
+              <Card.Header className="fs-4">Não Finalizados</Card.Header>
+              <Card.Body>
+                {todos
+                  .filter((todo) => !todo.attributes.complete)
+                  .map((todo) => {
+                    return (
+                      <Card key={todo.id} className="m-2 shadow">
+                        <Link
+                          to={`/todo-list/${todo.id}`}
+                          style={{ textDecoration: "none", color: "grey" }}
+                        >
+                          <Card.Body className="fs-5">
+                            {todo.attributes.title}
+                          </Card.Body>
+                        </Link>
+                      </Card>
+                    );
+                  })}
+              </Card.Body>
+            </Card>
+          </Col>
 
-      <h2>Lista - Finalizados</h2>
-      <div>
-        {todos
-          .filter((todo) => todo.attributes.complete)
-          .map((todo) => {
-            return (
-              <div key={todo.id}>
-                <Link to={`/todo-list/${todo.id}`}>
-                  {todo.attributes.title}
-                </Link>
-                <p>{todo.attributes.name}</p>
-              </div>
-            );
-          })}
-      </div>
+          <Col className="m-3">
+            <Card bg="light" border="success">
+              <Card.Header className="fs-4">Finalizados</Card.Header>
+              <Card.Body>
+                {todos
+                  .filter((todo) => todo.attributes.complete)
+                  .map((todo) => {
+                    return (
+                      <Card key={todo.id} className="m-2 shadow">
+                        <Link
+                          to={`/todo-list/${todo.id}`}
+                          style={{ textDecoration: "none", color: "grey" }}
+                        >
+                          <Card.Body className="fs-5">
+                            {todo.attributes.title}
+                          </Card.Body>
+                        </Link>
+                      </Card>
+                    );
+                  })}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
