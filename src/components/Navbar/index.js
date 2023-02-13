@@ -1,11 +1,11 @@
-
+import { Link } from "react-router-dom";
 
 function Navbar() {
-    return (
-        <nav>
-            <h2>Ironhack turma 94</h2>
-        </nav>
-    );
+  return (
+    <nav>
+      <Link to="/">Ironhack turma 94</Link>
+    </nav>
+  );
 }
 
 export default Navbar;
