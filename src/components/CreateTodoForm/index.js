@@ -1,5 +1,8 @@
 import { useState } from "react";
 import api from "../../api/api";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { Card, Col, Container, FloatingLabel, Row } from "react-bootstrap";
 
 function CreateTodoForm({ setReload }) {
   const [form, setForm] = useState({
@@ -21,42 +24,94 @@ function CreateTodoForm({ setReload }) {
     await api.post(`/tasks`, obj);
 
     setReload((reload) => !reload);
-    setForm({});
+    setForm({
+      name: "",
+      title: "",
+      dueDate: "",
+      desc: "",
+    });
   }
 
   return (
-    <form>
-      <input
-        type="text"
-        name="name"
-        placeholder="name"
-        value={form.name}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="title"
-        placeholder="title"
-        value={form.title}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="desc"
-        placeholder="descrição"
-        value={form.desc}
-        onChange={handleChange}
-      />
-      <input
-        type="date"
-        name="dueDate"
-        placeholder="Data final"
-        value={form.dueDate}
-        onChange={handleChange}
-      />
+    <Container>
+      <Card className="shadow my-3">
+        <Card.Header className="fs-1">To do list</Card.Header>
+        <Card.Body>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <FloatingLabel
+                    controlId="floatingInput"
+                    label="Seu nome"
+                    className="mb-3"
+                  >
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      placeholder="name"
+                      value={form.name}
+                      onChange={handleChange}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <FloatingLabel
+                    controlId="floatingInput"
+                    label="Título da sua nota"
+                    className="mb-3"
+                  >
+                    <Form.Control
+                      type="text"
+                      name="title"
+                      placeholder="title"
+                      value={form.title}
+                      onChange={handleChange}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Text className="text-muted">Data Final</Form.Text>
+                  <Form.Control
+                    type="date"
+                    name="dueDate"
+                    placeholder="Data final"
+                    value={form.dueDate}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-      <button onClick={handleSubmit}>Criar tarefa</button>
-    </form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <FloatingLabel
+                controlId="floatingInput"
+                label="Descrição mais detalhada."
+                className="mb-3"
+              >
+                <Form.Control
+                  as="textarea"
+                  name="desc"
+                  style={{ height: "100px" }}
+                  placeholder="descrição"
+                  value={form.desc}
+                  onChange={handleChange}
+                />
+              </FloatingLabel>
+            </Form.Group>
+          </Form>
+        </Card.Body>
+        <Card.Footer>
+          <Button variant="outline-success" onClick={handleSubmit}>
+            Criar tarefa
+          </Button>
+        </Card.Footer>
+      </Card>
+    </Container>
   );
 }
 
