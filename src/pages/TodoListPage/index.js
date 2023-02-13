@@ -16,7 +16,6 @@ function TodoListPage() {
     fetchTodos();
   }, [reload]);
 
-  console.log(todos);
 
   return (
     <div>
@@ -24,16 +23,36 @@ function TodoListPage() {
 
       <CreateTodoForm setReload={setReload} />
 
-      <h2>Lista</h2>
+      <h2>Lista - Não Finalizados</h2>
       <div>
-        {todos.map((todo) => {
-          return (
-            <div key={todo.id}>
-              <Link to={`/todo-list/${todo.id}`}>{todo.attributes.title}</Link>
-              <p>{todo.attributes.name}</p>
-            </div>
-          );
-        })}
+        {todos
+          .filter((todo) => !todo.attributes.complete)
+          .map((todo) => {
+            return (
+              <div key={todo.id}>
+                <Link to={`/todo-list/${todo.id}`}>
+                  {todo.attributes.title}
+                </Link>
+                <p>{todo.attributes.name}</p>
+              </div>
+            );
+          })}
+      </div>
+
+      <h2>Lista - Finalizados</h2>
+      <div>
+        {todos
+          .filter((todo) => todo.attributes.complete)
+          .map((todo) => {
+            return (
+              <div key={todo.id}>
+                <Link to={`/todo-list/${todo.id}`}>
+                  {todo.attributes.title}
+                </Link>
+                <p>{todo.attributes.name}</p>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
