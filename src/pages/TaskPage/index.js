@@ -47,11 +47,9 @@ function TaskPage() {
     navigate(`/todo-list`);
   }
 
-  console.log(todo);
-  console.log(form);
-
   return (
     <>
+      <button onClick={() => navigate("/todo-list")}>Voltar</button>
       {!isLoading && (
         <>
           <div>
