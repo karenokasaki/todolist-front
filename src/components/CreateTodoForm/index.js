@@ -23,6 +23,8 @@ function CreateTodoForm({ setReload }) {
 
     await api.post(`/tasks`, obj);
 
+    
+
     setReload((reload) => !reload);
     setForm({
       name: "",

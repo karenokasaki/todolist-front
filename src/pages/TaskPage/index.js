@@ -8,6 +8,7 @@ import {
   Row,
   Form,
   Card,
+  InputGroup,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/api";
@@ -17,10 +18,12 @@ function TaskPage() {
   const navigate = useNavigate();
 
   const [todo, setTodo] = useState({});
+  const [comment, setComment] = useState({ user: "", comment: "" });
   const [isLoading, setIsLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+
   const [showEdit, setShowEdit] = useState(false);
   const [form, setForm] = useState({});
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     async function fetchTodo() {
@@ -47,6 +50,10 @@ function TaskPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  function handleChangeComment(e) {
+    setComment({ ...comment, [e.target.name]: e.target.value });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -54,6 +61,25 @@ function TaskPage() {
 
     await api.put(`/tasks/${id}`, obj);
     setShowEdit(false);
+    setReload(!reload);
+  }
+
+  async function handleSubmitComment(e) {
+    e.preventDefault();
+
+    let clone = { ...todo.attributes };
+
+    if (!clone.support) {
+      clone.support = [];
+    }
+    clone.support.push(comment);
+
+    await api.put(`/tasks/${id}`, { data: { support: clone.support } });
+
+    setComment({
+      user: "",
+      comment: "",
+    });
     setReload(!reload);
   }
 
@@ -67,12 +93,43 @@ function TaskPage() {
     setReload(!reload);
   }
 
+  async function handleDeleteComment(index) {
+    let clone = { ...todo.attributes };
+    clone.support.splice(index, 1);
+
+    await api.put(`/tasks/${id}`, { data: { support: clone.support } });
+    setReload(!reload);
+  }
+
+  function calculateDays() {
+    let today = new Date(Date.now());
+    let dueDate = new Date(todo.attributes.dueDate);
+
+    let dif = dueDate.getTime() - today.getTime();
+
+    let total = Math.ceil(dif / (1000 * 3600 * 24));
+
+    console.log(total);
+
+    if (total <= 0) {
+      return "Atrasado!";
+    }
+
+    if (total === 1) {
+      return `${total} dia`;
+    }
+
+    return `${total} dias`;
+  }
+
   console.log(todo);
+  console.log(comment);
 
   return (
     <>
       {!isLoading && (
         <Container>
+          {/* Details */}
           <Card className="my-5 shadow">
             <Card.Header>
               <h1>{todo.attributes.title}</h1>
@@ -88,6 +145,8 @@ function TaskPage() {
                   <Button variant="outline-primary">
                     {todo.attributes.dueDate}
                   </Button>
+                  <p className="text-muted">Tempo restante</p>
+                  <Button variant="outline-primary">{calculateDays()}</Button>
                   <p className="text-muted">Status</p>
                   <Button
                     variant={
@@ -132,6 +191,57 @@ function TaskPage() {
                   </Button>
                 </Col>
               </Row>
+            </Card.Footer>
+          </Card>
+
+          {/* Comments */}
+          <Card>
+            <Card.Header>
+              <h2>Comentários</h2>
+            </Card.Header>
+            <Card.Body>
+              {!todo.attributes.support && <p>Seja o primeiro a comentar!</p>}
+              {todo.attributes.support &&
+                todo.attributes.support.map((cE, index) => {
+                  return (
+                    <>
+                      <Card.Text>
+                        <span>
+                          {cE.user}: {cE.comment}{" "}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline-danger"
+                          onClick={(e) => handleDeleteComment(index)}
+                        >
+                          Deletar
+                        </Button>
+                      </Card.Text>
+                    </>
+                  );
+                })}
+            </Card.Body>
+            <Card.Footer>
+              <InputGroup className="mb-3">
+                <InputGroup.Text>User</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  name="user"
+                  value={comment.user}
+                  onChange={handleChangeComment}
+                />
+                <InputGroup.Text>Comentário</InputGroup.Text>
+                <Form.Control
+                  as="textarea"
+                  type="text"
+                  name="comment"
+                  value={comment.comment}
+                  onChange={handleChangeComment}
+                />
+                <Button variant="outline-success" onClick={handleSubmitComment}>
+                  Enviar!
+                </Button>
+              </InputGroup>
             </Card.Footer>
           </Card>
         </Container>
