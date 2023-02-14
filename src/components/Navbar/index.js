@@ -7,13 +7,14 @@ function NavBar() {
   return (
     <Navbar bg="light" variant="light">
       <Container>
-        <Navbar.Brand as={"div"}>Ironhack</Navbar.Brand>
+        <div className="nav-brand">Ironhack</div>
         <Nav className="me-auto">
-          <Link to="/">
-            <Nav.Link href="">Home</Nav.Link>
+          <Link to="/" className="nav-link">
+            Home
           </Link>
-          <Link to="/todo-list">
-            <Nav.Link href="">Todo List</Nav.Link>
+
+          <Link to="/todo-list" className="nav-link">
+            Todo List
           </Link>
         </Nav>
       </Container>
